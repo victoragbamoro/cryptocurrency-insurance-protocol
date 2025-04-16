@@ -14,3 +14,37 @@
 (define-constant ERR_LIQUIDATION_FAILED (err u8))
 (define-constant ERR_EMERGENCY_STOP (err u9))
 (define-constant ERR_ORACLE_VALIDATION_FAILED (err u10))
+
+;; Advanced Storage Structures
+(define-map policies 
+  { 
+    policy-id: uint,
+    holder: principal 
+  }
+  {
+    coverage-amount: uint,
+    premium: uint,
+    start-block: uint,
+    expiration-block: uint,
+    risk-category: (string-ascii 50),
+    is-active: bool,
+    dynamic-parameters: (list 10 uint),
+    additional-coverage-types: (list 5 (string-ascii 30))
+  }
+)
+
+(define-map claims
+  {
+    policy-id: uint,
+    claim-id: uint
+  }
+  {
+    claim-amount: uint,
+    claim-status: (string-ascii 20),
+    claim-timestamp: uint,
+    claim-evidence: (optional (string-ascii 255)),
+    oracle-validation-data: (optional (string-ascii 255)),
+    claim-complexity-score: uint
+  }
+)
+
