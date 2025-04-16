@@ -102,3 +102,31 @@
     validation-success-rate: uint
   }
 )
+
+;; Emergency Stop Mechanism
+(define-public (activate-emergency-stop)
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (var-set emergency-stop-activated true)
+    (ok true)
+  )
+)
+
+;; Utility Functions with Enhanced Logic
+(define-private (calculate-premium 
+  (coverage-amount uint) 
+  (risk-category (string-ascii 50))
+  (dynamic-params (list 10 uint))
+  (additional-coverage-types (list 5 (string-ascii 30)))
+)
+  (let (
+    (risk-pool (unwrap-panic (map-get? risk-pools { risk-category: risk-category })))
+    (base-premium (* coverage-amount (/ (get risk-multiplier risk-pool) u100)))
+    (dynamic-adjustment (fold + dynamic-params u0))
+  )
+  ;; Complex premium calculation
+  (+ base-premium 
+     (/ (* base-premium dynamic-adjustment) u1000)
+     (* (len additional-coverage-types) u10)
+  )
+))
