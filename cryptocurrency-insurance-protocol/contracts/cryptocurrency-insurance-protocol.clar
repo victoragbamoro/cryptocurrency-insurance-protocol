@@ -306,3 +306,35 @@
     )
   )
 )
+
+(define-private (process-claim-payment (policy-id uint) (claim-id uint))
+  (let (
+    (claim (unwrap-panic (map-get? claims { policy-id: policy-id, claim-id: claim-id })))
+    (policy (unwrap-panic (map-get? policies { policy-id: policy-id, holder: tx-sender })))
+  )
+    ;; Ensure contract has sufficient funds
+    (asserts! (>= (var-get contract-liquidity) (get claim-amount claim)) ERR_INSUFFICIENT_FUNDS)
+    
+    
+    ;; Update risk pool
+    (update-risk-pool-value (get risk-category policy) (- u0 (get claim-amount claim)))
+    
+    (ok true)
+  )
+)
+
+;; Administrative Functions
+(define-public (add-admin (new-admin principal) (role (string-ascii 20)) (permissions (list 5 (string-ascii 30))))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (map-set authorized-admins
+      { admin: new-admin }
+      {
+        role: role,
+        permissions: permissions,
+        active-since: stacks-block-height
+      }
+    )
+    (ok true)
+  )
+)
