@@ -48,3 +48,30 @@
   }
 )
 
+;; Enhanced Risk Pool Management
+(define-map risk-pools
+  { 
+    risk-category: (string-ascii 50) 
+  }
+  {
+    total-pool-value: uint,
+    risk-multiplier: uint,
+    liquidity-buffer: uint,
+    reinsurance-threshold: uint
+  }
+)
+
+;; Advanced Governance and Voting Mechanism
+(define-map claim-votes
+  {
+    claim-id: uint,
+    voter: principal
+  }
+  {
+    vote: bool,
+    voting-power: uint,
+    voting-stake: uint,
+    reputation-score: uint
+  }
+)
+
