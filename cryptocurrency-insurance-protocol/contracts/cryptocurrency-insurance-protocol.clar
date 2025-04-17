@@ -251,3 +251,31 @@
     special-benefits: (list 3 (string-ascii 30))
   }
 )
+
+
+
+(define-public (deactivate-emergency-stop)
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+    (var-set emergency-stop-activated false)
+    (ok true)
+  )
+)
+
+
+(define-data-var next-payment-id uint u0)
+(define-data-var total-premiums-collected uint u0)
+(define-data-var total-claims-paid uint u0)
+(define-data-var contract-liquidity uint u0)
+
+
+;; Initial risk pool and oracle configurations
+(map-set risk-pools
+  { risk-category: "low-risk" }
+  {
+    total-pool-value: u0,
+    risk-multiplier: u10,
+    liquidity-buffer: u1000,
+    reinsurance-threshold: u5000
+  }
+)
