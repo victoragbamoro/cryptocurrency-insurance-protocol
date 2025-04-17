@@ -279,3 +279,39 @@
     reinsurance-threshold: u5000
   }
 )
+
+(map-set external-oracles
+  { oracle-id: u1 }
+  {
+    oracle-address: CONTRACT_OWNER,
+    last-validation-block: u0,
+    validation-success-rate: u100
+  }
+)
+
+
+(define-private (calculate-claim-complexity (claim-amount uint) (policy-id uint))
+  (let (
+    (policy (unwrap-panic (map-get? policies { policy-id: policy-id, holder: tx-sender })))
+    (coverage-ratio (/ (* claim-amount u100) (get coverage-amount policy)))
+  )
+    (if (> coverage-ratio u80)
+      u3  ;; High complexity
+      (if (> coverage-ratio u40)
+        u2  ;; Medium complexity
+        u1) ;; Low complexity
+    )
+  )
+)
+
+
+(define-private (update-risk-pool-value (risk-category (string-ascii 50)) (amount uint))
+  (let (
+    (pool (unwrap-panic (map-get? risk-pools { risk-category: risk-category })))
+  )
+    (map-set risk-pools
+      { risk-category: risk-category }
+      (merge pool { total-pool-value: (+ (get total-pool-value pool) amount) })
+    )
+  )
+)
