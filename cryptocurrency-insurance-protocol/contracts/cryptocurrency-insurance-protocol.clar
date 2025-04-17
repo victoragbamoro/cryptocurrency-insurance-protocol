@@ -183,3 +183,19 @@
     reinsurance-threshold: u5000 
   }
 )
+
+(map-set external-oracles
+  { oracle-id: u1 }
+  {
+    oracle-address: CONTRACT_OWNER,
+    last-validation-block: u0,
+    validation-success-rate: u100
+  }
+)
+
+
+(define-constant ERR_INVALID_PREMIUM_PAYMENT (err u11))
+(define-constant ERR_POLICY_NOT_ACTIVE (err u12))
+(define-constant ERR_ALREADY_VOTED (err u13))
+(define-constant ERR_INVALID_PARAMETERS (err u14))
+(define-constant ERR_INSUFFICIENT_REPUTATION (err u15))
