@@ -227,3 +227,27 @@
     next-due-date: uint
   }
 )
+
+(define-map referrals
+  {
+    referrer: principal,
+    referee: principal
+  }
+  {
+    timestamp: uint,
+    reward-amount: uint,
+    status: (string-ascii 20)
+  }
+)
+
+
+(define-map discount-tiers
+  {
+    tier-level: uint
+  }
+  {
+    reputation-threshold: uint,
+    discount-percentage: uint,
+    special-benefits: (list 3 (string-ascii 30))
+  }
+)
